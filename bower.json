@@ -19,5 +19,8 @@
     "lib",
     "test",
     "tests"
-  ]
+  ],
+  "devDependencies": {
+    "jasmine": "~1.3.1"
+  }
 }
