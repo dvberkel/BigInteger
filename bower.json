@@ -1,0 +1,23 @@
+{
+  "name": "BigInteger",
+  "version": "0.0.0",
+  "homepage": "https://github.com/dvberkel/BigInteger",
+  "authors": [
+    "Daan van Berkel <daan.v.berkel.1980@gmail.com>"
+  ],
+  "description": "A JavaScript library to do arithmetic with arbitrary precision integers in any base",
+  "main": "js/BigInteger.js",
+  "keywords": [
+    "BigInteger",
+    "arithmetic"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "lib",
+    "test",
+    "tests"
+  ]
+}
