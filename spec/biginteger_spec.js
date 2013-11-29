@@ -37,7 +37,7 @@ describe('BigInteger', function(){
 		});
 	    });
 
-	    describe('\'number\' should match /(+|-)?[1-9a-zA-Z][0-9a-zA-Z]*/', function(){
+	    describe('\'number\' should match parseble string', function(){
 		var parsing = function(value, base){
 		    return function(){ BigInteger.parse(value, base); }
 		}

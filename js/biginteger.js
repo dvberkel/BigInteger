@@ -1,4 +1,4 @@
-var BigInteger = (function(undefined){
+var BigInteger = (function(pico, undefined){
     function normalizeBase(base) {
 	return typeof base ==  'undefined' ? 10 : base;
     }
@@ -9,20 +9,29 @@ var BigInteger = (function(undefined){
 	    return ciphers[index];
 	};
     })();
-    var range = function(from, to){
-	if (typeof to == 'undefined'){
-	    to = from;
-	    from = 0;
-	}
-	if (to <= 9) {
-	    return '[' + cipher(from) + '-' + cipher(to) + ']';
-	}
-	if (to > 9) {
-	    var alpha = cipher(10) + '-' + cipher(to);
-	    return '[' + cipher(from) + '-' + cipher(9) + alpha + alpha.toUpperCase() + ']';
-	}
-    };
-    window.range = range;
+    var range = (function(){
+	var naked = pico('{{from}}-{{to}}');
+	var single = pico('[{{digits}}]');
+	var multi = pico('[{{digits}}{{alpha}}{{ALPHA}}]')
+	return function(from, to){
+	    if (typeof to == 'undefined'){
+		to = from;
+		from = 0;
+	    }
+	    to = to -1;
+	    if (to <= 9) {
+		return single({ digits: naked({ from: cipher(from), to: cipher(to) }) });
+	    }
+	    if (to > 9) {
+		var data = {
+		    'digits' : naked({ from: cipher(from), to: cipher(9) }),
+		    'alpha' : naked({ from: cipher(10), to: cipher(to) }),
+		    'ALPHA' : naked({ from: cipher(10), to: cipher(to) }).toUpperCase()
+		}
+		return multi(data);
+	    }
+	};
+    })();
 
     var BaseValidator = function(base){
 	this.base = normalizeBase(base);
@@ -56,4 +65,4 @@ var BigInteger = (function(undefined){
     };
 
     return new BigInteger();
-})();
+})(pico);
