@@ -63,4 +63,44 @@ describe('BigInteger', function(){
 	    });
 	});
     });
+
+    describe('operations', function(){
+	describe('#equals', function(){
+	    it('should be true for same object', function(){
+		var identical = BigInteger.parse('1');
+
+		expect(identical.equals(identical)).toBeTruthy();
+	    });
+
+	    it('should be false for an other type', function(){
+		var n = BigInteger.parse('1');
+
+		expect(n.equals("1")).toBeFalsy();
+		expect(n.equals(1)).toBeFalsy();
+	    })
+
+	    it('should be false for numbers with different base', function(){
+		var base10 = BigInteger.parse('1', 10);
+		var base16 = BigInteger.parse('1', 16);
+
+		expect(base10.equals(base16)).toBeFalsy();
+	    });
+
+	    it('should be false for numbers of different length', function(){
+		var length2 = BigInteger.parse('12', 10);
+		var length3 = BigInteger.parse('123', 10);
+
+		expect(length2.equals(length3)).toBeFalsy();
+	    });
+
+	    it('should be true for equal numbers', function(){
+		['1', '12', '123', '1234', '12345', '123456'].forEach(function(testCase){
+		    var m = BigInteger.parse(testCase, 16);
+		    var n = BigInteger.parse(testCase, 16);
+
+		    expect(m.equals(n)).toBeTruthy();
+		});
+	    });
+	});
+    });
 });

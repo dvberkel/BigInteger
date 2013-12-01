@@ -5,8 +5,14 @@ var BigInteger = (function(pico, undefined){
 
     var cipher = (function(){
 	var ciphers = '0123456789abcdefghijklmnopqrstuvwxyz';
-	return function(index){
-	    return ciphers[index];
+	var symbols = ciphers.split('');
+	return {
+	    'symbol': function(index){
+		return ciphers[index];
+	    },
+	    'index': function(symbol){
+		return symbols.indexOf(symbol.toLowerCase());
+	    }
 	};
     })();
     var range = (function(){
@@ -20,13 +26,13 @@ var BigInteger = (function(pico, undefined){
 	    }
 	    to = to -1;
 	    if (to <= 9) {
-		return single({ digits: naked({ from: cipher(from), to: cipher(to) }) });
+		return single({ digits: naked({ from: cipher.symbol(from), to: cipher.symbol(to) }) });
 	    }
 	    if (to > 9) {
 		var data = {
-		    'digits' : naked({ from: cipher(from), to: cipher(9) }),
-		    'alpha' : naked({ from: cipher(10), to: cipher(to) }),
-		    'ALPHA' : naked({ from: cipher(10), to: cipher(to) }).toUpperCase()
+		    'digits' : naked({ from: cipher.symbol(from), to: cipher.symbol(9) }),
+		    'alpha' : naked({ from: cipher.symbol(10), to: cipher.symbol(to) }),
+		    'ALPHA' : naked({ from: cipher.symbol(10), to: cipher.symbol(to) }).toUpperCase()
 		}
 		return multi(data);
 	    }
@@ -55,13 +61,36 @@ var BigInteger = (function(pico, undefined){
 	return new RegExp(raw);
     }
 
+    var Number = function(ciphers, base){
+	this.ciphers = ciphers;
+	this.base = base;
+    };
+    Number.prototype.equals = function(other){
+	if (this === other) {
+	    return true;
+	}
+	if (this.base === other.base && this.ciphers.length === other.ciphers.length) {
+	    var index = 0;
+	    while (index < this.ciphers.length) {
+		if (this.ciphers[index] !== other.ciphers[index]) {
+		    return false;
+		}
+		index++;
+	    }
+	    return true;
+	}
+	return false;
+
+    };
+
     var BigInteger = function(){};
     BigInteger.prototype.parse = function(number, base){
 	var baseValidator = new BaseValidator(base);
 	if (!baseValidator.isValid()) { throw 'mistaken' };
 	var numberValidator = new NumberValidator(number, base);
 	if(!numberValidator.isValid()) { throw 'mistaken' };
-	return {};
+	var ciphers = number.split('').reverse().map(cipher.index);
+	return new Number(ciphers, normalizeBase(base));
     };
 
     return new BigInteger();
