@@ -80,8 +80,26 @@ var BigInteger = (function(pico, undefined){
 	    return true;
 	}
 	return false;
-
     };
+    Number.prototype.plus = function(other){
+	if (this.base !== other.base) { throw "mistaken" }
+	var ciphers = [];
+	var carry = 0;
+	var index = 0;
+	while(index < this.ciphers.length && index < other.ciphers.length) {
+	    ciphers[index] = this.ciphers[index] + other.ciphers[index] + carry;
+	    carry = 0;
+	    while (ciphers[index] >= this.base) {
+		ciphers[index] -= this.base
+		carry += 1;
+	    }
+	    index++;
+	}
+	if (carry > 0) {
+	    ciphers.push(carry);
+	}
+	return new Number(ciphers, this.base);
+    }
 
     var BigInteger = function(){};
     BigInteger.prototype.parse = function(number, base){

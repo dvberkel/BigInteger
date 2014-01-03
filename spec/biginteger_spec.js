@@ -102,5 +102,28 @@ describe('BigInteger', function(){
 		});
 	    });
 	});
+
+	describe('#plus', function(){
+	    it('should add numbers of the same base', function(){
+		var base = 3;
+		var one = BigInteger.parse('1', base);
+		var two = BigInteger.parse('2', base);
+		var three = BigInteger.parse('10', base);
+
+		var result = one.plus(two);
+
+		expect(three.equals(result)).toBeTruthy();
+	    });
+
+	    it('should throw exception on adding different bases', function(){
+		var addDifferentBases = function(b0, b1){
+		    var i = BigInteger.parse('1', b0);
+		    var j = BigInteger.parse('1', b1);
+		    return function(){ i.plus(j); }
+		}
+
+		expect(addDifferentBases(2, 3)).toThrow();
+	    })
+	})
     });
 });
